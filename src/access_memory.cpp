@@ -33,15 +33,6 @@ static BCAM<CAM_KEY_WIDTH, CAM_VALUE_WIDTH, CAM_DEPTH> bcam;
 /**
  * @brief BCAM access kernel for the HS_H (High-Speed Hierarchical) mode.
  *
- * In write mode, the entry is inserted using dummy_add (direct-index write).
- * In read mode, a compile-time binary-tree search (BinaryMatchIndex) locates
- * the matching entry without iterating linearly, maximising clock frequency.
- *
- * HLS directives applied:
- *  - PIPELINE       – single-cycle II target
- *  - ARRAY_PARTITION complete – all entries accessible in one cycle
- *  - AGGREGATE      – pack the Entry struct fields into a single wide word
- *
  * @param[in]     key   Key to insert or search.
  * @param[in,out] value Value to write (write mode) or value read out (read mode).
  * @param[out]    index Slot index of the match, or @c -1 on a lookup miss.
@@ -68,15 +59,6 @@ bool access_cam(const ap_uint<CAM_KEY_WIDTH> &key, ap_uint<CAM_VALUE_WIDTH> &val
 
 /**
  * @brief BCAM access kernel for the standard synthesis modes (BF, BL, HS).
- *
- * In write mode, the entry is inserted using dummy_add (direct-index write).
- * In read mode, search_entry() performs a parallel exact-key comparison across
- * all valid entries.
- *
- * HLS directives depend on the active mode macro:
- *  - @b BF  : LUTRAM storage, no array partitioning (lowest area).
- *  - @b HS  : PIPELINE + complete partitioning + AGGREGATE (highest speed).
- *  - @b BL  : PIPELINE + cyclic factor-16 partitioning + LUTRAM (balanced).
  *
  * @param[in]     key   Key to insert or search.
  * @param[in,out] value Value to write (write mode) or value read out (read mode).
@@ -127,15 +109,6 @@ static TCAM<CAM_KEY_WIDTH, CAM_VALUE_WIDTH, CAM_DEPTH> tcam;
 /**
  * @brief TCAM access kernel for the HS_H (High-Speed Hierarchical) mode.
  *
- * In write mode, the entry is inserted using dummy_add (direct-index write).
- * In read mode, a compile-time binary-tree ternary search (TernaryMatchIndex)
- * locates the matching entry, maximising clock frequency.
- *
- * HLS directives applied:
- *  - PIPELINE       – single-cycle II target
- *  - ARRAY_PARTITION complete – all entries accessible in one cycle
- *  - AGGREGATE      – pack the Entry struct fields into a single wide word
- *
  * @param[in]     key   Key to insert or search.
  * @param[in]     mask  Care-bit mask used during insert and ternary search.
  * @param[in,out] value Value to write (write mode) or value read out (read mode).
@@ -163,15 +136,6 @@ bool access_cam(const ap_uint<CAM_KEY_WIDTH> &key, const ap_uint<CAM_KEY_WIDTH> 
 
 /**
  * @brief TCAM access kernel for the standard synthesis modes (BF, BL, HS).
- *
- * In write mode, the entry is inserted using dummy_add (direct-index write).
- * In read mode, search_entry() performs a parallel ternary comparison across
- * all valid entries.
- *
- * HLS directives depend on the active mode macro:
- *  - @b BF : LUTRAM storage, no array partitioning (lowest area).
- *  - @b HS : PIPELINE + complete partitioning + AGGREGATE (highest speed).
- *  - @b BL : PIPELINE + cyclic factor-16 partitioning + LUTRAM (balanced).
  *
  * @param[in]     key   Key to insert or search.
  * @param[in]     mask  Care-bit mask used during insert and ternary search.
@@ -218,16 +182,6 @@ static STCAM<CAM_KEY_WIDTH, CAM_VALUE_WIDTH, CAM_DEPTH> stcam;
 
 /**
  * @brief STCAM access kernel for the standard synthesis modes (BF, BL, HS).
- *
- * In write mode the entry is inserted using dummy_add, using the lower 8 bits
- * of @p key as the mask_shift (i.e., the number of don't-care LSBs).
- * In read mode, search_entry() performs a Longest Prefix Match across all
- * valid entries.
- *
- * HLS directives depend on the active mode macro:
- *  - @b BF : LUTRAM storage, no array partitioning (lowest area).
- *  - @b HS : PIPELINE + complete partitioning (highest speed).
- *  - @b BL : PIPELINE + cyclic factor-2 partitioning + LUTRAM + AGGREGATE.
  *
  * @param[in]  key   Key to insert or search.
  * @param[out] value Set to the matched entry's value when found.

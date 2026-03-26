@@ -16,10 +16,6 @@
  * @brief Recursive template that finds the index of the minimum element in the
  *        sub-array @p x[START..END] using a divide-and-conquer strategy.
  *
- * The recursion is resolved entirely at compile time, which allows Vitis HLS
- * to generate a balanced tree of comparators rather than a chain, improving
- * timing and enabling pipelining.
- *
  * @tparam T     Element type (must support comparison operators).
  * @tparam START First index of the sub-array range (inclusive).
  * @tparam END   Last index of the sub-array range (inclusive).
@@ -52,10 +48,10 @@ struct MinIndex
 };
 
 /**
- * @brief Base-case specialisation of MinIndex for a single-element range.
+ * @brief Base-case specialization of MinIndex for a single-element range.
  *
  * @tparam T     Element type.
- * @tparam INDEX The single index of this specialisation.
+ * @tparam INDEX The single index of this specialization.
  */
 template<typename T, int INDEX>
 struct MinIndex<T, INDEX, INDEX>

@@ -52,8 +52,7 @@ public:
     volatile Entry entries[DEPTH];
 
     /**
-     * @brief Default constructor – entry array is left uninitialised; the
-     *        hardware reset is expected to clear the valid bits.
+     * @brief Default constructor – entry array is left uninitialised.
      */
     STCAM() {
     }
