@@ -11,7 +11,7 @@ The design is templated and highly configurable, enabling easy adjustment of key
 
 ## Features
 - Written in standard **C++** for **AMD (Xilinx) Vitis HLS** toolchain
-- Supports **Brute Force (BF)**, **Balanced (BL)**, **High-Speed (HS)**, and **High-Speed Hierarchical (HS_H)** optimization modes
+- Supports multiple optimization modes
 - Flexible memory partitioning to balance between resource usage and lookup latency
 - Achieves competitive operating frequencies without relying on BRAMs
 - Suitable for **high-speed packet classification**, **firewall rule matching**, **flow table lookup**, and **5G core user management**
@@ -21,7 +21,7 @@ The design is templated and highly configurable, enabling easy adjustment of key
 | Mode | Macro | Description |
 |------|-------|-------------|
 | Brute Force | `BF` | Sequential scan with LUTRAM storage. Lowest resource usage, highest latency. |
-| Balanced | `BL` | Pipelined with cyclic array partitioning (factor 16). Balances speed and area. |
+| Balanced | `BL` | Pipelined with cyclic array partitioning. Balances speed and area. |
 | High Speed | `HS` | Fully pipelined with complete array partitioning. Maximum throughput. |
 | High Speed Hierarchical | `HS_H` | Pipelined with a compile-time binary-tree search. Targets maximum clock frequency through a balanced comparator tree. |
 
